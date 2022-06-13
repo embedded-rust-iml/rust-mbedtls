@@ -14,10 +14,6 @@ use {
     std::sync::Arc,
 };
 
-#[cfg(not(feature = "std"))]
-use core_io::{Read, Write, Result as IoResult};
-
-
 use mbedtls_sys::types::raw_types::{c_int, c_uchar, c_void};
 use mbedtls_sys::types::size_t;
 use mbedtls_sys::*;
@@ -37,6 +33,7 @@ pub trait IoCallback {
     fn data_ptr(&mut self) -> *mut c_void;
 }
 
+#[cfg(feature = "std")]
 impl<IO: Read + Write> IoCallback for IO {
     unsafe extern "C" fn call_recv(user_data: *mut c_void, data: *mut c_uchar, len: size_t) -> c_int {
         let len = if len > (c_int::max_value() as size_t) {
@@ -425,6 +422,20 @@ impl<T> Context<T> {
     }
 }
 
+impl<T: IoCallback> Context<T> {
+    pub fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
+        unsafe {
+            ssl_read(self.into(), buf.as_mut_ptr(), buf.len()).into_result().map(|r| r as usize)
+        }
+    }
+
+    pub fn write(&mut self, buf: &[u8]) -> Result<usize> {
+        unsafe {
+            ssl_write(self.into(), buf.as_ptr(), buf.len()).into_result().map(|w| w as usize)
+        }
+    }
+}
+
 impl<T> Drop for Context<T> {
     fn drop(&mut self) {
         unsafe {
@@ -434,9 +445,10 @@ impl<T> Drop for Context<T> {
     }
 }
 
+#[cfg(feature = "std")]
 impl<T: IoCallback> Read for Context<T> {
     fn read(&mut self, buf: &mut [u8]) -> IoResult<usize> {
-        match unsafe { ssl_read(self.into(), buf.as_mut_ptr(), buf.len()).into_result() } {
+        match self.read(buf) {
             Err(Error::SslPeerCloseNotify) => Ok(0),
             Err(e) => Err(crate::private::error_to_io_error(e)),
             Ok(i) => Ok(i as usize),
@@ -444,9 +456,10 @@ impl<T: IoCallback> Read for Context<T> {
     }
 }
 
+#[cfg(feature = "std")]
 impl<T: IoCallback> Write for Context<T> {
     fn write(&mut self, buf: &[u8]) -> IoResult<usize> {
-        match unsafe { ssl_write(self.into(), buf.as_ptr(), buf.len()).into_result() } {
+        match self.write(buf) {
             Err(Error::SslPeerCloseNotify) => Ok(0),
             Err(e) => Err(crate::private::error_to_io_error(e)),
             Ok(i) => Ok(i as usize),
@@ -457,6 +470,7 @@ impl<T: IoCallback> Write for Context<T> {
         Ok(())
     }
 }
+
 //
 // Class exists only during SNI callback that is configured from Config.
 // SNI Callback must provide input whos lifetime exceed the SNI closure to avoid memory corruptions.
