@@ -562,9 +562,6 @@ mod tests {
     #[cfg(feature = "std")]
     use std::io::{Read,Write, Result as IoResult};
 
-    #[cfg(not(feature = "std"))]
-    use core_io::{Read, Write, Result as IoResult};
-
     use crate::ssl::context::{HandshakeContext, Context};
     use crate::tests::TestTrait;
     
@@ -577,12 +574,14 @@ mod tests {
         _buffer: core::ptr::NonNull<u8>,
     }
 
+    #[cfg(feature = "std")]
     impl Read for NonSendStream {
         fn read(&mut self, _: &mut [u8]) -> IoResult<usize> {
             unimplemented!()
         }
     }
     
+    #[cfg(feature = "std")]
     impl Write for NonSendStream {
         fn write(&mut self, _: &[u8]) -> IoResult<usize> {
             unimplemented!()
@@ -597,12 +596,14 @@ mod tests {
         _buffer: u8,
     }
 
+    #[cfg(feature = "std")]
     impl Read for SendStream {
         fn read(&mut self, _: &mut [u8]) -> IoResult<usize> {
             unimplemented!()
         }
     }
     
+    #[cfg(feature = "std")]
     impl Write for SendStream {
         fn write(&mut self, _: &[u8]) -> IoResult<usize> {
             unimplemented!()
