@@ -10,15 +10,17 @@ use core::fmt;
 use core::ops::{Deref, DerefMut};
 use core::ptr::NonNull;
 use core::ptr::drop_in_place;
-use core::mem::ManuallyDrop;
+//use core::mem::ManuallyDrop;
 
 use mbedtls_sys::types::raw_types::c_void;
 
 extern "C" {
     #[link_name = concat!("\u{1}forward_mbedtls_free_", env!("RUST_MBEDTLS_METADATA_HASH"))]
     pub(crate) fn mbedtls_free(n: *mut mbedtls_sys::types::raw_types::c_void);
+/* only used in x509/certificate.rs which is commented out
     #[link_name = concat!("\u{1}forward_mbedtls_calloc_", env!("RUST_MBEDTLS_METADATA_HASH"))]
     pub(crate) fn mbedtls_calloc(n: mbedtls_sys::types::size_t, size: mbedtls_sys::types::size_t) -> *mut mbedtls_sys::types::raw_types::c_void;
+*/
 }
 
 #[repr(transparent)]
@@ -26,12 +28,14 @@ pub struct Box<T> {
     pub(crate) inner: NonNull<T>
 }
 
+/*
 impl<T> Box<T> {
     pub(crate) fn into_raw(self) -> *mut T {
         let v = ManuallyDrop::new(self);
         v.inner.as_ptr()
     }
 }
+*/
 
 impl<T> Deref for Box<T> {
     type Target = T;
@@ -64,7 +68,9 @@ impl<T> Drop for Box<T> {
 unsafe impl<T: Send> Send for Box<T> {}
 unsafe impl<T: Sync> Sync for Box<T> {}
 
+/*
 #[repr(transparent)]
 pub struct List<T> {
     pub(crate) inner: Option<Box<T>>
 }
+*/

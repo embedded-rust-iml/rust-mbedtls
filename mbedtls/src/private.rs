@@ -6,14 +6,14 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
-#[cfg(not(feature = "std"))]
-use crate::alloc_prelude::*;
+//#[cfg(not(feature = "std"))]
+//use crate::alloc_prelude::*;
 
-use mbedtls_sys::types::raw_types::c_char;
-use mbedtls_sys::types::raw_types::{c_int, c_uchar};
-use mbedtls_sys::types::size_t;
+//use mbedtls_sys::types::raw_types::c_char;
+//use mbedtls_sys::types::raw_types::{c_int, c_uchar};
+//use mbedtls_sys::types::size_t;
 
-use crate::error::{Error, IntoResult, Result};
+//use crate::error::{Error, IntoResult, Result};
 
 pub trait UnsafeFrom<T>
 where
@@ -22,6 +22,7 @@ where
     unsafe fn from(_: T) -> Option<Self>;
 }
 
+/*
 pub fn alloc_vec_repeat<F>(mut f: F, data_at_end: bool) -> Result<Vec<u8>>
 where
     F: FnMut(*mut c_uchar, size_t) -> c_int,
@@ -73,12 +74,14 @@ where
     let vec = alloc_vec_repeat(|b, s| f(b as _, s), false)?;
     String::from_utf8(vec).map_err(|e| e.utf8_error().into())
 }
+*/
 
 #[cfg(feature = "std")]
 pub unsafe fn cstr_to_slice<'a>(ptr: *const c_char) -> &'a [u8] {
     ::std::ffi::CStr::from_ptr(ptr).to_bytes()
 }
 
+/*
 #[cfg(not(feature = "std"))]
 pub unsafe fn cstr_to_slice<'a>(ptr: *const c_char) -> &'a [u8] {
     extern "C" {
@@ -87,6 +90,7 @@ pub unsafe fn cstr_to_slice<'a>(ptr: *const c_char) -> &'a [u8] {
     }
     ::core::slice::from_raw_parts(ptr as *const _, strlen(ptr))
 }
+*/
 
 #[cfg(feature = "std")]
 use std::io::{Error as IoError, ErrorKind as IoErrorKind};

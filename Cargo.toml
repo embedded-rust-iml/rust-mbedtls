@@ -1,3 +1,4 @@
 [workspace]
-members = ["mbedtls", "mbedtls-sys", "mbedtls-platform-support"]
+#members = ["mbedtls", "mbedtls-sys", "mbedtls-platform-support"]
+members = ["mbedtls", "mbedtls-sys"]
 resolver = "2"

@@ -11,25 +11,25 @@ use std::sync::Arc;
 #[cfg(feature = "std")]
 use std::borrow::Cow;
 
-use core::slice::from_raw_parts;
+//use core::slice::from_raw_parts;
 
 use mbedtls_sys::*;
 use mbedtls_sys::types::raw_types::*;
-use mbedtls_sys::types::size_t;
+//use mbedtls_sys::types::size_t;
 
 
-use crate::alloc::{List as MbedtlsList};
+//use crate::alloc::{List as MbedtlsList};
 #[cfg(not(feature = "std"))]
 use crate::alloc_prelude::*;
 use crate::error::{Error, Result, IntoResult};
-use crate::pk::Pk;
-use crate::pk::dhparam::Dhm;
-use crate::private::UnsafeFrom;
+//use crate::pk::Pk;
+//use crate::pk::dhparam::Dhm;
+//use crate::private::UnsafeFrom;
 use crate::rng::RngCallback;
 use crate::ssl::cookie::CookieCallback;
-use crate::ssl::context::HandshakeContext;
+//use crate::ssl::context::HandshakeContext;
 use crate::ssl::ticket::TicketCallback;
-use crate::x509::{self, Certificate, Crl, Profile, VerifyCallback};
+//use crate::x509::{self, Certificate, Crl, Profile, VerifyCallback};
 
 #[allow(non_camel_case_types)]
 #[derive(Eq, PartialEq, PartialOrd, Ord, Debug, Copy, Clone)]
@@ -99,8 +99,8 @@ define!(
 
 #[cfg(feature = "std")]
 callback!(DbgCallback: Fn(i32, Cow<'_, str>, i32, Cow<'_, str>) -> ());
-callback!(SniCallback: Fn(&mut HandshakeContext, &[u8]) -> Result<()>);
-callback!(CaCallback: Fn(&MbedtlsList<Certificate>) -> Result<MbedtlsList<Certificate>>);
+//callback!(SniCallback: Fn(&mut HandshakeContext, &[u8]) -> Result<()>);
+//callback!(CaCallback: Fn(&MbedtlsList<Certificate>) -> Result<MbedtlsList<Certificate>>);
 
 
 #[repr(transparent)]
@@ -148,11 +148,13 @@ define!(
     struct Config {
         // Holding reference counters against any structures that ssl_config might hold pointer to.
         // This allows caller to share structure on multiple configs if needed.
+        /*
         own_cert: Vec<Arc<MbedtlsList<Certificate>>>,
         own_pk: Vec<Arc<Pk>>,
     
         ca_cert: Option<Arc<MbedtlsList<Certificate>>>,
         crl: Option<Arc<Crl>>,
+        */
         
         rng: Option<Arc<dyn RngCallback + 'static>>,
         
@@ -160,12 +162,12 @@ define!(
         curves: Option<Arc<Vec<ecp_group_id>>>,
         protocols: Option<Arc<NullTerminatedStrList>>,
         
-        verify_callback: Option<Arc<dyn VerifyCallback + 'static>>,
+        //verify_callback: Option<Arc<dyn VerifyCallback + 'static>>,
         #[cfg(feature = "std")]
         dbg_callback: Option<Arc<dyn DbgCallback + 'static>>,
-        sni_callback: Option<Arc<dyn SniCallback + 'static>>,
+        //sni_callback: Option<Arc<dyn SniCallback + 'static>>,
         ticket_callback: Option<Arc<dyn TicketCallback + 'static>>,
-        ca_callback: Option<Arc<dyn CaCallback + 'static>>,
+        //ca_callback: Option<Arc<dyn CaCallback + 'static>>,
         dtls_cookies: Option<Arc<dyn CookieCallback + 'static>>,
     };
     const drop: fn(&mut Self) = ssl_config_free;
@@ -188,20 +190,22 @@ impl Config {
 
         Config {
             inner,
+            /*
             own_cert: vec![],
             own_pk: vec![],
             ca_cert: None,
             crl: None,
+            */
             rng: None,
             ciphersuites: vec![],
             curves: None,
             protocols: None,
-            verify_callback: None,
+            //verify_callback: None,
             #[cfg(feature = "std")]
             dbg_callback: None,
-            sni_callback: None,
+            //sni_callback: None,
             ticket_callback: None,
-            ca_callback: None,
+            //ca_callback: None,
             dtls_cookies: None,
         }
     }
@@ -244,11 +248,13 @@ impl Config {
         self.ciphersuites.push(list);
     }
 
+    /*
     pub fn set_curves(&mut self, list: Arc<Vec<ecp_group_id>>) {
         Self::check_c_list(&list);
         unsafe { ssl_conf_curves(self.into(), list.as_ptr()) }
         self.curves = Some(list);
     }
+    */
 
     pub fn set_rng<T: RngCallback + 'static>(&mut self, rng: Arc<T>) {
         unsafe { ssl_conf_rng(self.into(), Some(T::call), rng.data_ptr()) };
@@ -281,8 +287,9 @@ impl Config {
     }
 
     // Profile as implemented in profile.rs can only point to global variables from mbedtls which would have 'static lifetime
-    setter!(set_cert_profile(p: &'static Profile) = ssl_conf_cert_profile);
+    //setter!(set_cert_profile(p: &'static Profile) = ssl_conf_cert_profile);
 
+    /*
     /// Takes both DER and PEM forms of FFDH parameters in `DHParams` format.
     ///
     /// When calling on PEM-encoded data, `params` must be NULL-terminated
@@ -295,7 +302,9 @@ impl Config {
         }
         Ok(())
     }
+    */
 
+    /*
     pub fn set_ca_list(&mut self, ca_cert: Arc<MbedtlsList<Certificate>>, crl: Option<Arc<Crl>>) {
         // This will override internal pointers to what we provide.
         
@@ -383,10 +392,12 @@ impl Config {
         self.sni_callback = Some(Arc::new(cb));
         unsafe { ssl_conf_sni(self.into(), Some(sni_callback::<F>), &**self.sni_callback.as_mut().unwrap() as *const _ as *mut c_void) }
     }
+    */
 
     // The docs for mbedtls_x509_crt_verify say "The [callback] should return 0 for anything but a
     // fatal error.", so verify callbacks should return Ok(()) for anything but a fatal error.
     // Report verification errors by updating the flags in VerifyError.
+    /*
     pub fn set_verify_callback<F>(&mut self, cb: F)
     where
         F: VerifyCallback + 'static,
@@ -394,7 +405,9 @@ impl Config {
         self.verify_callback = Some(Arc::new(cb));
         unsafe { ssl_conf_verify(self.into(), Some(x509::verify_callback::<F>), &**self.verify_callback.as_ref().unwrap() as *const _ as *mut c_void) }
     }
+    */
 
+    /*
     pub fn set_ca_callback<F>(&mut self, cb: F)
     where
         F: CaCallback + 'static,
@@ -426,6 +439,7 @@ impl Config {
         self.ca_callback = Some(Arc::new(cb));
         unsafe { ssl_conf_ca_cb( self.into(), Some(ca_callback::<F>), &**self.ca_callback.as_mut().unwrap() as *const _ as *mut c_void) }
     }
+    */
 
     #[cfg(feature = "std")]
     pub fn set_dbg_callback<F>(&mut self, cb: F)
@@ -475,11 +489,13 @@ impl Config {
         }
     }
 
+    /*
     /// Sets the cookie context and callbacks which are required for DTLS servers
     pub fn set_dtls_cookies<T: CookieCallback + 'static>(&mut self, dtls_cookies: Arc<T>) {
         unsafe { ssl_conf_dtls_cookies(self.into(), Some(T::cookie_write), Some(T::cookie_check), dtls_cookies.data_ptr()) };
         self.dtls_cookies = Some(dtls_cookies);
     }
+    */
 }
 
 // TODO

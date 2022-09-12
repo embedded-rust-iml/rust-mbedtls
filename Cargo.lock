@@ -168,18 +168,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "chrono"
-version = "0.4.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8493056968583b0193c1bb04d6f7684586f3726992d6c573261941a895dbd68"
-dependencies = [
- "libc",
- "num-integer",
- "num-traits",
- "time",
-]
-
-[[package]]
 name = "cipher"
 version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -511,7 +499,6 @@ dependencies = [
  "hyper",
  "libc",
  "matches",
- "mbedtls-platform-support",
  "mbedtls-sys-auto",
  "num-bigint",
  "pin-project-lite",
@@ -524,17 +511,6 @@ dependencies = [
  "tokio",
  "tracing",
  "yasna",
-]
-
-[[package]]
-name = "mbedtls-platform-support"
-version = "0.1.0"
-dependencies = [
- "cc",
- "cfg-if 1.0.0",
- "chrono",
- "mbedtls-sys-auto",
- "spin",
 ]
 
 [[package]]
@@ -862,12 +838,6 @@ checksum = "6528351c9bc8ab22353f9d776db39a20288e8d6c37ef8cfe3317cf875eecfc2d"
 dependencies = [
  "autocfg 1.1.0",
 ]
-
-[[package]]
-name = "spin"
-version = "0.4.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ceac490aa12c567115b40b7b7fceca03a6c9d53d5defea066123debc83c5dc1f"
 
 [[package]]
 name = "strsim"
