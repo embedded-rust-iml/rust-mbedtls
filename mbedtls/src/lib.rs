@@ -16,8 +16,8 @@ compile_error!("Either the `std` or `no_std_deps` feature needs to be enabled");
 #[cfg(not(feature = "std"))]
 #[macro_use]
 extern crate alloc as rust_alloc;
-#[macro_use]
-extern crate bitflags;
+//#[macro_use]
+//extern crate bitflags;
 #[macro_use]
 extern crate serde_derive;
 // required explicitly to force inclusion at link time
@@ -30,17 +30,17 @@ mod wrapper_macros;
 // ==============
 //      API
 // ==============
-pub mod bignum;
+//pub mod bignum;
 mod error;
 pub use crate::error::{Error, Result};
 pub mod cipher;
-pub mod ecp;
+//pub mod ecp;
 pub mod hash;
-pub mod pk;
+//pub mod pk;
 pub mod rng;
-pub mod self_test;
+//pub mod self_test;
 pub mod ssl;
-pub mod x509;
+//pub mod x509;
 pub mod alloc;
 
 #[cfg(feature = "pkcs12")]

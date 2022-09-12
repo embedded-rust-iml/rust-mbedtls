@@ -208,9 +208,11 @@ impl Cipher {
         }
     }
 
+    /*
     pub fn set_padding(&mut self, padding: CipherPadding) -> Result<()> {
         unsafe { cipher_set_padding_mode(&mut self.inner, padding.into()).into_result_discard() }
     }
+    */
 
     // Cipher set IV - should be called after setup
     pub fn set_iv(&mut self, iv: &[u8]) -> Result<()> {
@@ -221,9 +223,11 @@ impl Cipher {
         unsafe { cipher_reset(&mut self.inner).into_result_discard() }
     }
 
+    /*
     pub fn update_ad(&mut self, ad: &[u8]) -> Result<()> {
         unsafe { cipher_update_ad(&mut self.inner, ad.as_ptr(), ad.len()).into_result_discard() }
     }
+    */
 
     pub fn update(&mut self, indata: &[u8], outdata: &mut [u8]) -> Result<usize> {
         // Check that minimum required space is available in outdata buffer
@@ -264,6 +268,7 @@ impl Cipher {
         Ok(olen)
     }
 
+    /*
     pub fn write_tag(&mut self, tag: &mut [u8]) -> Result<()> {
         unsafe {
             cipher_write_tag(&mut self.inner, tag.as_mut_ptr(), tag.len()).into_result_discard()
@@ -273,6 +278,7 @@ impl Cipher {
     pub fn check_tag(&mut self, tag: &[u8]) -> Result<()> {
         unsafe { cipher_check_tag(&mut self.inner, tag.as_ptr(), tag.len()).into_result_discard() }
     }
+    */
 
     // Utility function to get block size for the selected / setup cipher_info
     pub fn block_size(&self) -> usize {

@@ -178,10 +178,12 @@ impl<Op: Operation, T: Type> Cipher<Op, T, Fresh> {
         self.raw_cipher.reset()
     }
 
+    /*
     pub fn set_padding(&mut self, padding: raw::CipherPadding) -> Result<()> {
         self.padding = padding;
         self.raw_cipher.set_padding(padding)
     }
+    */
 }
 
 impl<O: Operation> Cipher<O, TraditionalNoIv, Fresh> {
@@ -219,6 +221,7 @@ impl<O: Operation> Cipher<O, Authenticated, Fresh> {
     }
 }
 
+/*
 impl<O: Operation> Cipher<O, Authenticated, AdditionalData> {
     pub fn set_ad(
         mut self,
@@ -232,6 +235,7 @@ impl<O: Operation> Cipher<O, Authenticated, AdditionalData> {
         Ok(self.change_state())
     }
 }
+*/
 
 impl Cipher<Encryption, Traditional, CipherData> {
     pub fn encrypt(
@@ -352,6 +356,7 @@ impl<O: Operation, T: Type> Cipher<O, T, CipherData> {
     }
 }
 
+/*
 impl<O: Operation> Cipher<O, Authenticated, Finished> {
     pub fn write_tag(mut self, out_tag: &mut [u8]) -> Result<Cipher<O, Authenticated, Finished>> {
         self.raw_cipher.write_tag(out_tag)?;
@@ -367,6 +372,7 @@ impl<O: Operation> Cipher<O, Authenticated, Finished> {
         Ok(self.change_state())
     }
 }
+*/
 
 #[test]
 fn cmac() {

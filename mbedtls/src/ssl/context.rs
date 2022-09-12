@@ -6,7 +6,7 @@
  * option. This file may not be copied, modified, or distributed except
  * according to those terms. */
 
-use core::result::Result as StdResult;
+//use core::result::Result as StdResult;
 
 #[cfg(feature = "std")]
 use {
@@ -20,12 +20,12 @@ use mbedtls_sys::*;
 
 #[cfg(not(feature = "std"))]
 use crate::alloc_prelude::*;
-use crate::alloc::{List as MbedtlsList};
+//use crate::alloc::{List as MbedtlsList};
 use crate::error::{Error, Result, IntoResult};
-use crate::pk::Pk;
-use crate::private::UnsafeFrom;
-use crate::ssl::config::{Config, Version, AuthMode};
-use crate::x509::{Certificate, Crl, VerifyError};
+//use crate::pk::Pk;
+//use crate::private::UnsafeFrom;
+use crate::ssl::config::{Config, Version/*, AuthMode*/};
+//use crate::x509::{Certificate, Crl, VerifyError};
 
 pub trait IoCallback {
     unsafe extern "C" fn call_recv(user_data: *mut c_void, data: *mut c_uchar, len: size_t) -> c_int where Self: Sized;
@@ -184,11 +184,13 @@ define!(
     #[c_ty(ssl_context)]
     #[repr(C)]
     struct HandshakeContext {
+        /*
         handshake_ca_cert: Option<Arc<MbedtlsList<Certificate>>>,
         handshake_crl: Option<Arc<Crl>>,
         
         handshake_cert: Vec<Arc<MbedtlsList<Certificate>>>,
         handshake_pk: Vec<Arc<Pk>>,
+        */
     };
     impl<'a> Into<ptr> {}
 
@@ -234,11 +236,13 @@ impl<T> Context<T> {
         Context {
             inner: HandshakeContext {
                 inner,
+                /*
                 handshake_ca_cert: None,
                 handshake_crl: None,
                 
                 handshake_cert: vec![],
                 handshake_pk: vec![],
+                */
             },
             config: config.clone(),
             io: None,
@@ -272,7 +276,7 @@ impl<T: IoCallback> Context<T> {
             );
 
             self.io = Some(io);
-            self.inner.reset_handshake();
+            //self.inner.reset_handshake();
         }
 
         match self.handshake() {
@@ -318,12 +322,14 @@ impl<T> Context<T> {
         }
     }
 
+    /*
     pub fn verify_result(&self) -> StdResult<(), VerifyError> {
         match unsafe { ssl_get_verify_result(self.into()) } {
             0 => Ok(()),
             flags => Err(VerifyError::from_bits_truncate(flags)),
         }
     }
+    */
 
     pub fn config(&self) -> &Arc<Config> {
         &self.config
@@ -388,6 +394,7 @@ impl<T> Context<T> {
         Ok(unsafe { self.handle().session.as_ref().unwrap().ciphersuite as u16 })
     }
 
+    /*
     pub fn peer_cert(&self) -> Result<Option<&MbedtlsList<Certificate>>> {
         if self.handle().session.is_null() {
             return Err(Error::SslBadInputData);
@@ -399,6 +406,7 @@ impl<T> Context<T> {
             Ok(Some(peer_cert))
         }
     }
+    */
 
 
     #[cfg(feature = "std")]
@@ -491,6 +499,7 @@ impl<T: IoCallback + Write> Write for Context<T> {
 // - mbedtls not providing any callbacks on handshake finish.
 // - no reasonable way to obtain a storage within the sni callback tied to the handshake or to the rust Context. (without resorting to a unscalable map or pointer magic that mbedtls may invalidate)
 //
+/*
 impl HandshakeContext {
     fn reset_handshake(&mut self) {
         self.handshake_cert.clear();
@@ -556,6 +565,7 @@ impl HandshakeContext {
         Ok(())
     }
 }
+*/
 
 #[cfg(test)]
 mod tests {

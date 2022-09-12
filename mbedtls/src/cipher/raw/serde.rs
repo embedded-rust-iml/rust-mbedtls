@@ -135,8 +135,8 @@ unsafe fn serialize_raw_cipher(mut cipher_context: cipher_context_t)
     cipher_context.cipher_ctx = ::core::ptr::null_mut();
 
     // Null function pointers
-    cipher_context.add_padding = None;
-    cipher_context.get_padding = None;
+    //cipher_context.add_padding = None;
+    //cipher_context.get_padding = None;
 
     Ok(SavedRawCipher {
         cipher_id: cipher_id,
@@ -187,7 +187,7 @@ impl<'de, Op: Operation, T: Type> Deserialize<'de> for Cipher<Op, T, CipherData>
     }
 }
 
-unsafe fn deserialize_raw_cipher(raw: SavedRawCipher, padding: raw::CipherPadding)
+unsafe fn deserialize_raw_cipher(raw: SavedRawCipher, _padding: raw::CipherPadding)
     -> Result<raw::Cipher, (&'static str, &'static str)> {
 
     let mut raw_cipher = match raw::Cipher::setup(
@@ -201,11 +201,13 @@ unsafe fn deserialize_raw_cipher(raw: SavedRawCipher, padding: raw::CipherPaddin
         }
     };
 
+    /*
     if raw.cipher_mode == MODE_CBC {
         raw_cipher
             .set_padding(padding)
             .map_err(|_| ("bad padding mode", "valid mode"))?;
     }
+    */
 
     let cipher_context = &mut raw_cipher.inner;
 
