@@ -440,6 +440,7 @@ pub const FEATURE_DEFINES: &'static [(&'static str, CDefine)] = &[
     ("aes_alt",               ("MBEDTLS_AES_DECRYPT_ALT",                   Defined)),
     ("mpi_force_c_code",      ("MBEDTLS_MPI_FORCE_C_CODE",                  Defined)),
     ("trusted_cert_callback", ("MBEDTLS_X509_TRUSTED_CERTIFICATE_CALLBACK", Defined)),
+    ("no_std",                ("MBEDTLS_PLATFORM_NO_STD_FUNCTIONS",         Defined)),
 ];
 
 #[cfg_attr(rustfmt, rustfmt_skip)]

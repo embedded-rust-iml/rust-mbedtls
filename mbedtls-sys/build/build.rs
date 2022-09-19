@@ -62,6 +62,15 @@ impl BuildConfig {
                 if FEATURES.have_platform_component("time", "custom") {
                     writeln!(f, "long long mbedtls_time(long long*);")?;
                 }
+                if FEATURES.have_feature("no_std") {
+                    // In no_std environments, stdio.h, stdlib.h and time.h will not be included in
+                    // platform.h. Since stdlib.h is missing, we need to declare calloc and free
+                    // which have to be provided by the Rust environment later. stddef.h is
+                    // required for size_t.
+                    writeln!(f, "#include <stddef.h>")?;
+                    writeln!(f, "void *calloc(size_t nitems, size_t size);")?;
+                    writeln!(f, "void free(void *ptr);")?;
+                }
                 f.write_all(config::SUFFIX.as_bytes())
             })
             .expect("config.h I/O error");

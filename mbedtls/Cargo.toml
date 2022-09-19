@@ -36,7 +36,7 @@ rs-libc = "0.2.0"
 [dependencies.mbedtls-sys-auto]
 version = "2.25.0"
 default-features = false
-features = ["trusted_cert_callback", "threading"]
+features = ["trusted_cert_callback"]
 path = "../mbedtls-sys"
 
 # Commented-out because not no_std
@@ -66,7 +66,7 @@ default = ["std", "aesni", "time", "padlock"]
 std = ["byteorder/std", "mbedtls-sys-auto/std", "serde/std", "yasna"]
 debug = ["mbedtls-sys-auto/debug"]
 #no_std_deps = ["mbedtls-platform-support/spin", "serde/alloc"]
-no_std_deps = ["serde/alloc"]
+no_std_deps = ["serde/alloc", "mbedtls-sys-auto/no_std"]
 #force_aesni_support = ["mbedtls-platform-support/force_aesni_support", "aesni"]
 force_aesni_support = ["aesni"]
 mpi_force_c_code = ["mbedtls-sys-auto/mpi_force_c_code"]
@@ -76,6 +76,7 @@ aesni = []
 zlib = ["mbedtls-sys-auto/zlib"]
 #time = ["mbedtls-platform-support/time"]
 time = []
+threading = ["mbedtls-sys-auto/threading"]
 padlock = ["mbedtls-sys-auto/padlock"]
 dsa = ["std", "yasna", "num-bigint", "bit-vec"]
 pkcs12 = ["std", "yasna"]
