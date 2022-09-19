@@ -37,7 +37,7 @@ chrono = "0.4"
 [dependencies.mbedtls-sys-auto]
 version = "2.25.0"
 default-features = false
-features = ["custom_printf", "trusted_cert_callback", "threading"]
+features = ["custom_printf", "trusted_cert_callback"]
 path = "../mbedtls-sys"
 
 [dev-dependencies]
@@ -56,13 +56,14 @@ cc = "1.0"
 default = ["std", "aesni", "time", "padlock"]
 std = ["mbedtls-sys-auto/std", "serde/std", "yasna"]
 debug = ["mbedtls-sys-auto/debug"]
-no_std_deps = ["spin", "serde/alloc"]
+no_std_deps = ["mbedtls-sys-auto/no_std", "spin", "serde/alloc"]
 force_aesni_support = ["mbedtls-sys-auto/custom_has_support", "mbedtls-sys-auto/aes_alt", "aesni"]
 mpi_force_c_code = ["mbedtls-sys-auto/mpi_force_c_code"]
 rdrand = []
 aesni = ["mbedtls-sys-auto/aesni"]
 zlib = ["mbedtls-sys-auto/zlib"]
 time = ["mbedtls-sys-auto/time"]
+threading = ["mbedtls-sys-auto/threading"]
 padlock = ["mbedtls-sys-auto/padlock"]
 dsa = ["std", "yasna", "num-bigint", "bit-vec"]
 pkcs12 = ["std", "yasna"]

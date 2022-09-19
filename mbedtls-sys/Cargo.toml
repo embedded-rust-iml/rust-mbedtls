@@ -44,6 +44,7 @@ quote = "1.0.9"
 # * rand/printf (used only for self tests. optionally use custom_printf)
 default = ["std", "debug", "threading", "zlib", "time", "aesni", "padlock", "legacy_protocols"]
 std = ["debug"] # deprecated automatic enabling of debug, can be removed on major version bump
+no_std = []
 debug = []
 custom_printf = []
 custom_has_support = []
