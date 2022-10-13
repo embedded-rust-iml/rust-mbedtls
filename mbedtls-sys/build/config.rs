@@ -393,7 +393,7 @@ const DEFAULT_DEFINES: &'static [CDefine] = &[
     ("MBEDTLS_SSL_OUT_CONTENT_LEN",                       Undefined), // default: 16384
     ("MBEDTLS_SSL_DTLS_MAX_BUFFERING",                    Undefined), // default: 32768
     ("MBEDTLS_SSL_DEFAULT_TICKET_LIFETIME",               Undefined), // default: 86400
-    ("MBEDTLS_PSK_MAX_LEN",                               Undefined), // default: 32
+    ("MBEDTLS_PSK_MAX_LEN",                               DefinedAs("64")), // default: 32
     ("MBEDTLS_SSL_COOKIE_TIMEOUT",                        Undefined), // default: 60
     ("MBEDTLS_TLS_EXT_CID",                               Undefined), // default: 254
     ("MBEDTLS_SSL_CIPHERSUITES",                          Undefined), // default: no default
