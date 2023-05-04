@@ -210,7 +210,7 @@ if(CMAKE_COMPILER_IS_GNU)
 endif(CMAKE_COMPILER_IS_GNU)
 
 if(CMAKE_COMPILER_IS_CLANG)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wwrite-strings -Wpointer-arith -Wimplicit-fallthrough -Wshadow -Wvla -Wformat=2 -Wno-format-nonliteral")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-unused-but-set-variable -Wextra -Wwrite-strings -Wpointer-arith -Wimplicit-fallthrough -Wshadow -Wvla -Wformat=2 -Wno-format-nonliteral")
     set(CMAKE_C_FLAGS_RELEASE     "-O2")
     set(CMAKE_C_FLAGS_DEBUG       "-O0 -g3")
     set(CMAKE_C_FLAGS_COVERAGE    "-O0 -g3 --coverage")
